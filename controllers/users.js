@@ -12,7 +12,9 @@ const UsersController = {
   },
 
   getAllUsers(req, res) {
-    models.User.findAll()
+    models.User.findAll({
+      include: [{ model: models.Transaction }]
+    })
     .then(allUsers => {
         res.json(allUsers);
     })

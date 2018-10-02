@@ -4,5 +4,6 @@ const router = express.Router();
 
 router.use('/alt', require('./alt'));
 router.use('/api/user', require('./users'));
+router.use('/api/transaction', require('./transaction'));
 
 module.exports = router;
