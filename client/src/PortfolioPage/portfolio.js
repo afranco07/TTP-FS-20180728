@@ -22,7 +22,6 @@ class PortfolioPage extends Component {
     this.setState(() => {
       return { ticker: '', quantity: '' };
     });
-    console.log(this.state);
   }
 
   render() {
