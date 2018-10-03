@@ -1,5 +1,6 @@
 const express = require('express');
 const models = require('../models');
+const passport = require('passport');
 
 const UsersController = {
   registerRouter() {
@@ -7,6 +8,7 @@ const UsersController = {
 
     router.get('/', this.getAllUsers);
     router.post('/', this.createUser);
+    router.get('/:id', this.getUserByID);
 
     return router;
   },
@@ -32,6 +34,14 @@ const UsersController = {
     .catch( e => {
         res.send(400).send(e);
     })
+  },
+
+  getUserByID(req, res) {
+    models.User.findById(req.params.id, {include: [{ model: models.Transaction }]})
+    .then(user => {
+      res.json(user);
+    })
+    .catch(console.error);
   },
 };
 

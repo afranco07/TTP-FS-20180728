@@ -26,7 +26,7 @@ passport.use(new JWTStrategy({
   secretOrKey: 'ttp_secret'
 },
   function (jwtPayload, cb) {
-    return UserModel.findOneById(jwtPayload.id)
+    return Users.findById(jwtPayload.id)
       .then(user => {
         return cb(null, user);
       })

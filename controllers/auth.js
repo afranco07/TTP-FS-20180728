@@ -26,7 +26,7 @@ const AuthController = {
         if (err) {
           res.send(err);
         }
-        const token = jwt.sign(JSON.stringify(user), 'your_jwt_secret');
+        const token = jwt.sign(JSON.stringify(user), 'ttp_secret');
         return res.json({ user, token });
       });
     })(req, res);
