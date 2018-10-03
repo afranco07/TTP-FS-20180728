@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Header, List } from 'semantic-ui-react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 
 class TransactionsPage extends Component {
   constructor() {
@@ -59,6 +59,7 @@ class TransactionsPage extends Component {
     return (
       <Container>
         <Header size="huge">Transactions</Header>
+        <Link to="/portfolio">Portfolio Page</Link>
         <List celled size="massive">
           {this.state.transList}
         </List>

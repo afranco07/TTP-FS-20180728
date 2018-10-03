@@ -8,7 +8,7 @@ const UsersController = {
 
     router.get('/', this.getAllUsers);
     router.post('/', this.createUser);
-    router.get('/:id', this.getUserByID);
+    router.get('/:id', passport.authenticate('jwt', { session: false}), this.getUserByID);
 
     return router;
   },
@@ -26,7 +26,8 @@ const UsersController = {
   createUser(req, res) {
     models.User.create({
         email: req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        balance: 5000.00
     })
     .then( user => {
         res.send("User created successfully");

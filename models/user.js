@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         email: DataTypes.STRING,
         password: DataTypes.STRING,
+        balance: DataTypes.DECIMAL(10, 2)
     });
 
     User.associate = (models) => {

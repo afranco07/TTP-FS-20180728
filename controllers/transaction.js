@@ -17,9 +17,14 @@ const TransactionController = {
         price: req.body.price,
         quantity: req.body.quantity
     })
-    .then( user => {
+    .then( trans => {
+        return models.User.findById(req.body.userid)
         res.send("Transaction created successfully");
     })
+    .then(user => {
+      return user.decrement('balance', {by: req.body.price })
+    })
+    .then( () => res.send("Transaction created successfully"))
     .catch( e => {
         res.send(400).send(e);
     })

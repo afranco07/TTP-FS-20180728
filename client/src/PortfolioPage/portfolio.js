@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Container, Header, Grid, List } from 'semantic-ui-react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 
 class PortfolioPage extends Component {
   constructor() {
@@ -9,11 +9,13 @@ class PortfolioPage extends Component {
         ticker: '',
         quantity: '',
         isLoggedIn: localStorage.getItem("login"),
-        transList: []
+        transList: [],
+        balance: '',
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.fetchUserTransactions = this.fetchUserTransactions.bind(this);
+    this.buyStock = this.buyStock.bind(this);
   }
 
   handleInputChange(event, { name, value }) {
@@ -48,15 +50,27 @@ class PortfolioPage extends Component {
             return response.json()
         })
         .then(json => {
+          let balance = json.balance;
           let transactions = json.Transactions.map(trans => {
+            let color = 'grey';
+            fetch(`https://api.iextrading.com/1.0/stock/${trans.ticker}/book`).then(response => response.json())
+              .then(json => {
+                if (json.quote.latestPrice < json.quote.open){
+                  color = 'red';
+                } else if (json.quote.latestPrice > json.quote.open) {
+                  color = 'green';
+                } else {
+                  color = 'grey';
+                }
+              })
             return(
-              <List.Item key={trans.id}>
+              <List.Item key={trans.id} style={{color}}>
                 {`${trans.ticker} - ${trans.quantity} shares`}
               </List.Item>
             );
           });
           this.setState(() => {
-            return { transList: transactions };
+            return { transList: transactions, balance };
           });
         });
     } else {
@@ -64,6 +78,37 @@ class PortfolioPage extends Component {
         return { isLoggedIn: false };
       });
     }
+  }
+
+  buyStock() {
+    let { ticker, quantity, balance } = this.state;
+    quantity = +quantity;
+    const userid = localStorage.getItem("id");
+    const baseURL = `https://api.iextrading.com/1.0/stock/${ticker}/price`;
+    fetch(baseURL)
+      .then(response => {
+        if(response.status === 200) {
+          return response.json();
+        } else {
+          return -1;
+        }
+      })
+      .then(price => {
+        if (price > 0 && (price * quantity) < balance) {
+          let data = {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ ticker, quantity, price, userid })
+          };
+          fetch('api/transaction', data);
+        }
+      })
+      .then(() => this.fetchUserTransactions())
+      .catch(error => {
+        console.log(error);
+      })
   }
 
   render() {
@@ -75,6 +120,7 @@ class PortfolioPage extends Component {
     return (
       <Container>
         <Header size="huge">Portfolio</Header>
+        <Link to="/">Transactions Page</Link>
         <Grid container columns={2} divided>
             <Grid.Column>
             <List celled size="huge">
@@ -82,10 +128,10 @@ class PortfolioPage extends Component {
             </List>
             </Grid.Column>
             <Grid.Column onSubmit={this.handleSubmit}>
-                <Header size="large">Cash - $ 5000.00</Header>
-                <Form>
+                <Header size="large">Cash - $ {this.state.balance}</Header>
+                <Form onSubmit={this.buyStock}>
                     <Form.Input placeholder="Ticker" name="ticker" value={this.state.ticker} onChange={this.handleInputChange} required />
-                    <Form.Input placeholder="Qty" name="quantity" value={this.state.quantity} onChange={this.handleInputChange} required />
+                    <Form.Input placeholder="Qty" name="quantity" type="number" value={this.state.quantity} onChange={this.handleInputChange} required />
                     <Form.Button>Buy</Form.Button>
                 </Form>
             </Grid.Column>
