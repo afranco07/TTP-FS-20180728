@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Container, Header, Grid, List } from 'semantic-ui-react';
+import { Form, Container, Header, Grid, List, Message } from 'semantic-ui-react';
 import { Redirect, Link } from 'react-router-dom';
 
 class PortfolioPage extends Component {
@@ -11,6 +11,7 @@ class PortfolioPage extends Component {
         isLoggedIn: localStorage.getItem("login"),
         transList: [],
         balance: '',
+        buyFailed: false
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -90,11 +91,12 @@ class PortfolioPage extends Component {
         if(response.status === 200) {
           return response.json();
         } else {
-          return -1;
+          throw new Error("Error with ticker");
         }
       })
       .then(price => {
         if (price > 0 && (price * quantity) < balance) {
+          this.setState({buyFailed: false});
           let data = {
             method: "POST",
             headers: {
@@ -103,11 +105,16 @@ class PortfolioPage extends Component {
             body: JSON.stringify({ ticker, quantity, price, userid })
           };
           fetch('api/transaction', data);
+        } else {
+          throw new Error("Not enough balance")
         }
       })
       .then(() => this.fetchUserTransactions())
       .catch(error => {
         console.log(error);
+        this.setState(() => {
+          return { buyFailed: true };
+        });
       })
   }
 
@@ -134,6 +141,7 @@ class PortfolioPage extends Component {
                     <Form.Input placeholder="Qty" name="quantity" type="number" value={this.state.quantity} onChange={this.handleInputChange} required />
                     <Form.Button>Buy</Form.Button>
                 </Form>
+                { this.state.buyFailed && <Message content="Error in ticker or balance" /> }
             </Grid.Column>
         </Grid>
       </Container>
