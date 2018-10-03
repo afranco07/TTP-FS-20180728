@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Container, Header } from 'semantic-ui-react';
+import { Form, Container, Header, Message } from 'semantic-ui-react';
 import { Link, Redirect } from 'react-router-dom';
 
 class RegisterPage extends Component {
@@ -9,7 +9,8 @@ class RegisterPage extends Component {
       email: '',
       name: '',
       password: '',
-      redirect: localStorage.getItem("login")
+      redirect: localStorage.getItem("login"),
+      userCreated: false
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -17,7 +18,7 @@ class RegisterPage extends Component {
 
   handleInputChange(event, { name, value }) {
     this.setState(() => {
-      return { [name]: value };
+      return { [name]: value, userCreated: false };
     });
   }
 
@@ -32,7 +33,7 @@ class RegisterPage extends Component {
     }
     fetch('/api/user', data);
     this.setState(() => {
-      return { email: '', password: '', name: ''};
+      return { email: '', password: '', name: '', userCreated: true};
     });
   }
 
@@ -51,6 +52,7 @@ class RegisterPage extends Component {
           <Form.Button>Submit</Form.Button>
         </Form>
         <Link to="/signin">Sign-In</Link>
+        { this.state.userCreated && <Message>Account successfully created, please <Link to="/signin">sign in</Link></Message>}
       </Container>
     );
   }
