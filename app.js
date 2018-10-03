@@ -8,6 +8,7 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+require('./middlewares/authentication');
 
 
 // Uncomment the following if you want to serve up static assets.
