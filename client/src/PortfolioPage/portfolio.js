@@ -127,7 +127,8 @@ class PortfolioPage extends Component {
     return (
       <Container>
         <Header size="huge">Portfolio</Header>
-        <Link to="/">Transactions Page</Link>
+        <Header><Link to="/">Transactions Page</Link></Header>
+        <Header onClick={() => localStorage.clear()}><Link to="/signin">Logout</Link></Header>
         <Grid container columns={2} divided>
             <Grid.Column>
             <List celled size="huge">

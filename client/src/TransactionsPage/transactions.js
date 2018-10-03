@@ -59,7 +59,8 @@ class TransactionsPage extends Component {
     return (
       <Container>
         <Header size="huge">Transactions</Header>
-        <Link to="/portfolio">Portfolio Page</Link>
+        <Header><Link to="/portfolio">Portfolio Page</Link></Header>
+        <Header onClick={() => localStorage.clear()}><Link to="/signin">Logout</Link></Header>
         <List celled size="massive">
           {this.state.transList}
         </List>
