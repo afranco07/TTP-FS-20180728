@@ -11,6 +11,7 @@ class SignInPage extends Component {
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.getToken = this.getToken.bind(this);
   }
 
   handleInputChange(event, { name, value }) {
@@ -20,10 +21,32 @@ class SignInPage extends Component {
   }
 
   handleSubmit() {
-    console.log(this.state);
+    this.getToken();
     this.setState(() => {
       return { email: '', password: ''};
     });
+  }
+
+  getToken() {
+    let postData = { ...this.state };
+    let data = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(postData)
+    }
+    fetch('/auth/login', data)
+      .then(response => {
+        if (response.status === 200) {
+          return response.json();
+        }
+      })
+      .then(json => {
+        console.log(json.token);
+        localStorage.setItem("login", json.token);
+        localStorage.setItem("id", json.user.id);
+      })
   }
 
   render() {
