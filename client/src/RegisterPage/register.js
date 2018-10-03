@@ -21,6 +21,15 @@ class RegisterPage extends Component {
   }
 
   handleSubmit() {
+    let postData = { ...this.state };
+    let data = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(postData)
+    }
+    fetch('/api/user', data);
     this.setState(() => {
       return { email: '', password: '', name: ''};
     });
