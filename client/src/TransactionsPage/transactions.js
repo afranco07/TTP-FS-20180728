@@ -32,7 +32,7 @@ class TransactionsPage extends Component {
             return(
               <List.Item key={trans.id}>
                 <List.Header>{trans.ticker}</List.Header>
-                {`${trans.quantity} shares @ ${trans.price}`}
+                {`BUY ${trans.quantity} shares @ ${trans.price}`}
               </List.Item>
             );
           });

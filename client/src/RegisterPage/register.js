@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Container, Header } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 class RegisterPage extends Component {
   constructor() {
@@ -8,7 +8,8 @@ class RegisterPage extends Component {
     this.state = {
       email: '',
       name: '',
-      password: ''
+      password: '',
+      redirect: localStorage.getItem("login")
     }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -36,6 +37,10 @@ class RegisterPage extends Component {
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to="/"/>;
+    }
+
     return (
       <Container text>
         <Header size="huge">Register</Header>
