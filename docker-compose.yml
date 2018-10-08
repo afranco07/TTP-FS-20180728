@@ -1,0 +1,30 @@
+version: "2"
+
+services:
+
+  express:
+    build:
+      context: .
+      dockerfile: express-backend.dockerfile
+    ports:
+      - "8000:8000"
+    networks: 
+      - nodeapp-network
+    volumes:
+      - .:/app/source
+
+  react:
+    build:
+      context: .
+      dockerfile: react-frontend.dockerfile
+    ports:
+      - "3000:3000"
+    networks: 
+      - nodeapp-network
+    volumes:
+      - ./client/public:/app/public
+      - ./client/src:/app/src
+
+networks:
+  nodeapp-network:
+    driver: bridge
