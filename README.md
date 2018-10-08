@@ -1,6 +1,10 @@
 # TTP
 
-## How to run/install
+## Install/run using Docker
+
+If you have docker installed, you can get the project running using the command `docker-compose up`. If you do not have docker installed, follow the instructions below.
+
+## How to run/install without Docker
 
 1. Clone the project
 2. Install dependencies using `npm install`
@@ -12,4 +16,4 @@
 
 #### About
 
-Made with React on the frontend, Express && Passport && Sqlite3 on the backend!
+Made with React on the frontend, Express && Passport && Sqlite3 on the backend! Packaged/Containerized with Docker!
